@@ -16,7 +16,7 @@ import "@fontsource/space-grotesk/700.css";
 import "@fontsource/inter-tight/400.css";
 import "@fontsource/inter-tight/500.css";
 import "@fontsource/inter-tight/600.css";
-import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/jetbrains-mono/index.css";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
