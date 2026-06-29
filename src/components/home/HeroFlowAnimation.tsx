@@ -34,10 +34,12 @@ export function HeroFlowAnimation() {
     const wrap = wrapRef.current;
     if (!canvas || !wrap) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const ctx2d = canvas.getContext("2d");
+    if (!ctx2d) return;
+    const ctx: CanvasRenderingContext2D = ctx2d;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 
     let w = 0, h = 0, dpr = 1;
     const resize = () => {
