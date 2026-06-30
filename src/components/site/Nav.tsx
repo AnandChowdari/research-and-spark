@@ -1,10 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { motion, useScroll, useSpring } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { LogoMark } from "./LogoMark";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.2 });
 
   const links = [
     { to: "/services/attention", label: "Attention" },
@@ -17,15 +20,30 @@ export function Nav() {
   return (
     <header className="sticky top-3 z-50 mx-3 lg:mx-6">
       <div
-        className="mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full border border-white/10 bg-background/40 px-4 pl-5 pr-3 backdrop-blur-xl backdrop-saturate-150 lg:px-6 lg:pr-4"
+        className="relative mx-auto flex h-16 max-w-7xl items-center justify-between overflow-hidden rounded-full border border-white/10 bg-background/40 px-4 pl-5 pr-3 backdrop-blur-xl backdrop-saturate-150 lg:px-6 lg:pr-4"
         style={{
           boxShadow:
-            "0 1px 0 0 color-mix(in oklab, var(--color-cream) 8%, transparent) inset, 0 20px 50px -20px rgb(0 0 0 / 0.6)",
+            "0 1px 0 0 color-mix(in oklab, var(--color-cream) 8%, transparent) inset, 0 0 40px -10px color-mix(in oklab, var(--color-lime) 22%, transparent), 0 20px 50px -20px rgb(0 0 0 / 0.6)",
         }}
       >
+        {/* scroll progress underline */}
+        <motion.div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-primary"
+          style={{ scaleX: progress }}
+        />
+        {/* faint inner scanline */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(180deg, transparent 0 3px, color-mix(in oklab, var(--color-cream) 4%, transparent) 3px 4px)",
+          }}
+        />
         <Link
           to="/"
-          className="flex items-center gap-2 font-display text-[1.25rem] font-semibold leading-none tracking-[-0.04em] sm:gap-2.5 sm:text-[1.4rem] lg:text-[1.55rem]"
+          className="relative z-10 flex items-center gap-2 font-display text-[1.25rem] font-semibold leading-none tracking-[-0.04em] sm:gap-2.5 sm:text-[1.4rem] lg:text-[1.55rem]"
         >
           <LogoMark className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8 lg:h-9 lg:w-9" />
           <span className="text-foreground">Flogrit</span>
@@ -33,7 +51,7 @@ export function Nav() {
 
 
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="relative z-10 hidden items-center gap-7 md:flex">
           {links.map((l) => (
             <Link
               key={l.to}
@@ -46,7 +64,7 @@ export function Nav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="relative z-10 flex items-center gap-3">
           <Link
             to="/contact"
             className="hidden rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] md:inline-block"
