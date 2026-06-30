@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import logo from "@/assets/flogrit-logo.svg.asset.json";
+import { LogoMark } from "./LogoMark";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
