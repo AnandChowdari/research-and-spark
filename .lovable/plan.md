@@ -1,158 +1,86 @@
-Updated plan with the new headline, hero animation, studio section, and the "two flows" adaptive narrative.
 
-## The big idea
+# Hero "Growth Engine" Animation — Rebuild Plan
 
-One homepage. One headline. **Reader picks their problem mid-scroll**, and the rest of the page reorders + rewords itself so their pillar leads and the other pillar gets pitched as the natural next step.
+Replace the current 3-node canvas pipeline with an SVG-based ambient system that occupies the right side of the hero and bleeds into the next section. Goal is feel, not explanation — visitors think "I wish my business worked like that."
 
-## Headline + hero
+## Files
 
-- H1: **"We create a flow of attention to leads for your business."**
-- Sub: One line — *Content that earns reach. AI systems that turn that reach into booked calls.*
-- CTAs: *Book a discovery call* (primary, lime) · *See the work* (ghost).
-- Right side: the 3-circle hero animation (below).
+- Rewrite `src/components/home/HeroFlowAnimation.tsx` — full SVG composition + Motion-driven pulse engine.
+- Light edit `src/components/home/HeroSection.tsx` — remove the rounded card frame so the system reads as the brand surface, not a thumbnail. Let it overflow the right edge and extend ~120px below the section so it can visually bleed into the next section.
+- No new dependencies. Uses `motion/react` (already installed) + native SVG.
 
-## Hero animation — 3-circle flow
-
-Canvas + particles, Framer Motion controls, ~60fps, respects `prefers-reduced-motion` (falls back to static SVG).
+## Composition (SVG, 100% width of right column, no card chrome)
 
 ```text
-   ┌─ Video Editing ─┐         ┌─ Meta Ads ──────┐         ┌─ CRM Sync ──────┐
-   │ Content Strat.  │         │ AI Automation   │         │ WhatsApp/IG bots│
-   │ Branding        │         │ SEO + Website   │         │ Voice Agents    │
-   └────────┬────────┘         └────────┬────────┘         └────────┬────────┘
-        ╭───▼───╮      ░░░         ╭────▼───╮     ░░░         ╭─────▼────╮
-        │ REACH │ ━━━━━━━━━━━━━▶  │  LEADS │ ━━━━━━━━━━━━━▶  │ SYSTEMS  │
-        ╰───────╯                  ╰────────╯                  ╰──────────╯
+            ┌── floating UI fragment (content card)
+            │
+   ●━━━━━╮  │     ╭━━━━━━●━━━━━━━━━╮
+  intake │  │     │     core       │ ──╮
+         ╰──┴─────┤   (AI brain)   │   ├──● outcome
+                  ╰━━━┬━━━━━━━━━━━╯   │
+                      ├── CRM frag ───┤
+                      ├── WA frag ────┤
+                      └── calendar ───╯
+                       (parallel branches)
 ```
 
-- 3 big nodes left→right, each pulsing in sequence; when a big node "lights up" its 3 sub-circles orbit in and dock.
-- Particle stream flows between big nodes (lime particles, purple trails), continuous loop.
-- On hover/tap a big node: sub-circles spread, labels animate in.
-- Built with `<canvas>` for the particle field + a thin SVG overlay for the circles/labels so text stays crisp & accessible.
+- 7 primary nodes: `intake`, `signal`, `route`, `core`, `branch-followup`, `branch-crm`, `branch-schedule`, `outcome` (8 total — intake + 6 working + outcome).
+- Connections are smooth cubic Béziers (`<path d="M.. C ..">`), generated from control points offset perpendicular to each segment — gives the fiber-optic feel, never straight.
+- Nodes rendered as layered SVG: outer translucent disc, inner gradient core, 1px hairline ring, single subtle lime highlight arc on top. No labels.
+- 4–5 floating UI fragments (abstract, unlabelled): small rounded rects with 2-3 internal lines/dots suggesting a calendar grid, message bubbles, a chart sparkline, a contact card. Positioned around the network, drifting via slow Motion `animate` loops (±3–6px over 6–11s, eased).
 
-## Page flow
+## Pulse engine
 
-```text
-1. HERO  (headline + 3-circle animation)
-2. STUDIO STRIP  (reel wall — masonry of vertical reels, autoplay-on-hover, metric overlays)
-3. THE GATE  ← personalization happens here
-4. PILLAR A  (deep dive)
-5. BRIDGE COPY  (rephrased per choice)
-6. PILLAR B  (deep dive)
-7. PROOF  (case studies + testimonials + stats)
-8. PRICING  (video plans + AI engagement tiers + custom)
-9. FAQ + FINAL CTA + FOOTER
+- Single lime pulse traveling along the network. Uses Motion's `useMotionValue` + `useAnimationFrame` to advance a normalized `t` along a precomputed path sequence.
+- Each path is measured once via `pathRef.getTotalLength()` so the pulse can be placed with `getPointAtLength(t * len)` — gives true curve-following motion.
+- Pulse is a small lime circle with `filter: url(#glow)` (SVG gaussian blur + merge) for the soft halo.
+- Node-arrival behavior: when pulse t enters a node radius, that node's Motion controls trigger a 600ms `scale 1 → 1.04 → 1` + `opacity` glow boost on its outer disc. No bounce, no flash.
+- Branching: after the `route` node, the pulse splits into 3 ghost pulses (cloned + lower opacity) that traverse the parallel branches at slightly different speeds, then re-merge at `outcome`.
+- Arrival at `outcome`: a single synchronized "wash" — every connection path's stroke opacity briefly lifts (600ms ease-out, 300ms hold, 1.2s ease-out down). Not an explosion. Then a new pulse starts from a different intake offset.
+
+## Ambient life (always running, even between pulses)
+
+- All nodes have a slow breathing transform (scale 1 → 1.015 → 1 over 7–11s, staggered phases).
+- Connection paths have an animated `<stop>` offset on their linear gradient (12–18s loop) so light direction slowly shifts.
+- Occasional micro-particles (3 at a time max) travel secondary connections at low opacity.
+- Core node has 5 small particles circulating inside via SVG `<animateMotion>` on a tiny ellipse path, suggesting "thinking."
+
+## Cursor awareness (no chase)
+
+- Single `pointermove` listener on the SVG wrapper. Compute distance to each node; if within 140px, lift that node's glow by up to +0.25 opacity (eased via Motion spring, stiffness 80, damping 20). UI fragments within 100px nudge 2–3px away from cursor on a spring. No element follows the cursor.
+
+## Scroll bleed into next section
+
+- Hero section's right column gets `overflow: visible` and the SVG extends ~140px below the section bottom via a tall viewBox + absolute positioning.
+- The pulse, on its final leg, exits the visible hero frame downward along a tail path that runs into the next section's top edge. The next section gets a thin lime gradient line entering from the top right that visually continues the pulse trail (decorative div with `mask-image: linear-gradient(to bottom, black, transparent)`).
+
+## Performance + accessibility
+
+- `prefers-reduced-motion`: disable pulse loop and breathing, keep static composition with one resting glow.
+- `IntersectionObserver` pauses the rAF loop when hero is offscreen.
+- SVG is `aria-hidden="true"`. The H1 remains the page's semantic anchor.
+- Targets ≤ 4ms/frame: ~30 animated SVG nodes total, no per-frame DOM creation, Motion values mutate transforms only.
+
+## Technical sketch
+
+```tsx
+// HeroFlowAnimation.tsx (shape only)
+const PATHS = [
+  { id: 'a', d: 'M 40 220 C 120 180, 180 240, 260 210' },     // intake → signal
+  { id: 'b', d: 'M 260 210 C 320 200, 360 260, 420 250' },    // signal → route
+  { id: 'c1', d: 'M 420 250 C 480 200, 540 180, 600 220' },   // branch followup
+  { id: 'c2', d: 'M 420 250 C 480 250, 540 250, 600 250' },   // branch crm
+  { id: 'c3', d: 'M 420 250 C 480 300, 540 320, 600 280' },   // branch schedule
+  { id: 'd', d: 'M 600 220 C 660 230, 700 240, 740 250' },    // merge → outcome (3 paths converge)
+  { id: 'tail', d: 'M 740 250 C 760 320, 740 400, 700 480' }, // bleed into next section
+]
+
+const pulse = useMotionValue(0)
+useAnimationFrame((t) => { /* advance, branch, trigger node controls */ })
 ```
 
-## Studio strip (section 2)
+## Out of scope
 
-Right after the hero, the vibe shifts hard — feels like walking into an edit bay.
-
-- Dark masonry wall of 8–10 vertical reels (9:16), staggered heights.
-- Each tile: poster frame → autoplays muted on hover, shows view-count + watch-time chip.
-- Subtle film-grain overlay, lime scrubber line animating across the section header.
-- Header: *"Built in our studio. Watched by your buyers."*
-- No sales copy here — it's pure showcase, lets the work talk.
-
-## The Gate (section 3) — inline, not modal
-
-Full-bleed band with two giant tappable cards:
-
-> **What's actually killing your growth right now?**
->
-> - **A) "I can't build presence."** I'm invisible. Posts flop, no one knows the brand exists.
-> - **B) "I get views but no customers."** Reach is fine, conversion is broken.
-
-- Choice persists in `localStorage` (`flow=A|B`), can be re-toggled from a small chip in the sticky nav.
-- No choice yet? Default = A. Page renders fine either way.
-- Smooth Framer Motion reorder when toggled (`<Reorder.Group>` style, ~400ms).
-
-## Two flows (same sections, reordered + reworded)
-
-### Flow A — "Build presence first"
-
-Pillar 1 = **Content & Reach** · Pillar 2 = **Conversion systems**
-
-- Bridge line between them: *"Cool — you've got eyes on you. Now the harder part: turning watchers into buyers."*
-- Pillar 1 gets the bigger visual real estate, Pillar 2 framed as "what comes next."
-
-### Flow B — "I need conversion"
-
-Pillar 1 = **Conversion systems** · Pillar 2 = **Content & Reach**
-
-- Bridge line: *"Funnels only work if there's traffic in them. Here's how we keep filling the top."*
-- Pillar 1 (AI/Ads) leads; Pillar 2 (Video) framed as the long-term moat.
-
-Both flows pull from the same component library — only `order`, hero copy of each pillar section, and bridge-line text change. Driven by a single `useFlow()` hook.
-
-## Pillar — Content & Reach (detailed)
-
-- Section hero with lime scrubber animation.
-- Services: **Video Editing · Content Strategy · Branding · Short-form reels · Long-form YouTube · Ad creatives**.
-- Each service = card with mini animated icon + 2-line outcome + sample work link.
-- Plans inline (from your sheet):
-  - **Simple**: 4×4000 / 8×3800 / 12×3500
-  - **Precise**: 4×7000 / 8×6800 / 12×6500
-  - Chips: *Try one video first* · *Bulk campaign? Book a call*
-- Custom band: SaaS animations · Product launch · Branding · *Starts ₹26,000*.
-
-## Pillar — Conversion systems (detailed)
-
-- Section hero with the **Ads → Automation → Conversion** SVG pipeline animating in.
-- Services, each with its own subsection:
-  - **Meta Ads** — creative + targeting + scaling.
-  - **AI Automation Systems** — Meta/WhatsApp/Instagram message automations.
-  - **Chatbots for websites** — qualify + book.
-  - **Voice Agents** — 24/7 inbound + outbound.
-  - **SEO Ranking** — content + technical + local.
-  - **Websites that convert** — fast, tracked, lead-routed.
-- "4 Lead Funnels" interactive diagram (4 nodes, tap to expand).
-- Outbound arrow: *From messages to booked calls.*
-
-## Sub-routes (depth + SEO)
-
-```
-/                      Adaptive home (everything above)
-/services/content      Video + content + branding deep dive
-/services/systems      Ads + AI + SEO + sites deep dive
-/work                  Case study grid
-/work/$slug            Long-form case study
-/pricing               All plans side-by-side
-/about                 Founder + studio + manifesto
-/contact               Form + calendar CTA
-```
-
-Every route has its own `head()` (title, description, og:title/description). `og:image` only at leaves.
-
-## Visual system
-
-- **Palette**: bg `#121212`, fg `#F0F2C0`, primary lime `#C6FF34` (hover `#A8E109`), accent purple `#8671D3`. Tokens in `src/styles.css` as oklch.
-- **Type**: Space Grotesk (display) · Inter Tight (body) · JetBrains Mono (numbers/labels), via `@fontsource`.
-- **Texture**: subtle film grain overlay on dark sections, lime scanline accents in the studio strip.
-- **Motion**: Framer Motion everywhere; one canvas animation (hero); reduced-motion path for everything.
-
-## Technical
-
-- TanStack Start file routes; `useFlow()` hook reads `localStorage` + URL `?flow=a|b` for shareable links.
-- Page sections render through a single `<FlowOrdered />` component that takes an array and reorders by flow.
-- Hero canvas isolated in its own client component, lazy-loaded, paused when off-screen via `IntersectionObserver`.
-- Reel wall uses `<video muted playsinline preload="metadata">`; only plays on hover/in-view.
-- All data (services, plans, cases, reels) in typed TS files — no backend in v1.
-- Contact form posts to a stub server function (logs + returns ok). Real delivery later.
-- SEO: per-route head(), semantic HTML, JSON-LD Organization on home + Article on case studies.
-
-## Out of scope (v1)
-
-Auth, CMS, real form delivery, blog, analytics dashboard, A/B testing infra. The flow toggle is the lightweight personalization — full A/B can come later.
-
-## Build order
-
-1. Tokens, fonts, nav, footer, root, `useFlow()` hook + flow context.
-2. Hero (headline + canvas 3-circle animation + reduced-motion SVG fallback).
-3. Studio reel-wall strip.
-4. The Gate + flow reorder mechanics.
-5. Pillar — Content & Reach (with both plan tables + custom band).
-6. Pillar — Conversion systems (with 4-funnel + ads pipeline diagrams).
-7. Proof, pricing, FAQ, final CTA.
-8. Sub-routes: `/services/*`, `/work` + 1 case template + 3 cases, `/pricing`, `/about`, `/contact`.
-9. SEO pass, reduced-motion pass, mobile pass.
+- No changes to hero copy, CTAs, or stats list.
+- No changes to other sections' content (only the thin decorative continuation line added at top of next section).
+- No new packages.
