@@ -1,4 +1,5 @@
 import { Zap, Globe, MessageCircle } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 
 export default function Footer() {
   return (
@@ -7,13 +8,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="md:col-span-1">
             <a href="#" className="flex items-center gap-2 mb-4">
-              <img src="/logo.svg" alt="Captiongrit Logo" className="w-8 h-8 object-contain rounded-md" />
-              <span className="font-display font-bold text-xl tracking-tight text-white">Captiongrit</span>
+              <img src="/captiongrit-logo.svg" alt="Captiongrit" className="w-8 h-8 object-contain" />
+              <span className="font-display font-semibold text-xl tracking-tight text-white">Captiongrit</span>
             </a>
             <p className="text-text-secondary text-sm mb-6 leading-relaxed">
-              AI-Powered Captions for Creators. Generate flawless captions in 24 languages directly inside your timeline.
+              Captions for creators — 24 languages, generated right inside your timeline.
             </p>
+            <Link to="/" className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/60 hover:text-[#C6FF34] transition-colors">
+              ← A Flogrit product
+            </Link>
           </div>
+
           
           <div>
             <h4 className="font-bold text-white mb-6">Product</h4>
