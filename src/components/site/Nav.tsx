@@ -43,7 +43,7 @@ export function Nav() {
         />
         <Link
           to="/"
-          className="flex items-center gap-2 font-display text-[1.25rem] font-semibold leading-none tracking-[-0.04em] sm:gap-2.5 sm:text-[1.4rem] lg:text-[1.55rem]"
+          className="relative z-10 flex items-center gap-2 font-display text-[1.25rem] font-semibold leading-none tracking-[-0.04em] sm:gap-2.5 sm:text-[1.4rem] lg:text-[1.55rem]"
         >
           <LogoMark className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8 lg:h-9 lg:w-9" />
           <span className="text-foreground">Flogrit</span>
@@ -51,7 +51,7 @@ export function Nav() {
 
 
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="relative z-10 hidden items-center gap-7 md:flex">
           {links.map((l) => (
             <Link
               key={l.to}
@@ -64,7 +64,7 @@ export function Nav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="relative z-10 flex items-center gap-3">
           <Link
             to="/contact"
             className="hidden rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] md:inline-block"
