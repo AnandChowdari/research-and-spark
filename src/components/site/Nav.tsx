@@ -15,10 +15,19 @@ export function Nav() {
   ] as const;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
-        <Link to="/" className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight">
-          <img src={logo.url} alt="" width={28} height={28} className="h-7 w-7" />
+    <header className="sticky top-3 z-50 mx-3 lg:mx-6">
+      <div
+        className="mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full border border-white/10 bg-background/40 px-4 pl-5 pr-3 backdrop-blur-xl backdrop-saturate-150 lg:px-6 lg:pr-4"
+        style={{
+          boxShadow:
+            "0 1px 0 0 color-mix(in oklab, var(--color-cream) 8%, transparent) inset, 0 20px 50px -20px rgb(0 0 0 / 0.6)",
+        }}
+      >
+        <Link
+          to="/"
+          className="flex items-center gap-2.5 font-display text-[1.35rem] font-semibold leading-none tracking-[-0.04em]"
+        >
+          <img src={logo.url} alt="" width={26} height={26} className="h-[1.4rem] w-[1.4rem]" />
           <span>Flogrit</span>
         </Link>
 
@@ -53,13 +62,13 @@ export function Nav() {
       </div>
 
       {open && (
-        <div className="border-t border-border bg-background md:hidden">
-          <div className="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-3">
+        <div className="mx-auto mt-2 max-w-7xl rounded-2xl border border-white/10 bg-background/70 backdrop-blur-xl md:hidden">
+          <div className="flex flex-col gap-1 px-3 py-3">
             {links.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
-                className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
+                className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
                 onClick={() => setOpen(false)}
               >
                 {l.label}
