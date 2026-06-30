@@ -30,7 +30,7 @@ export const Route = createFileRoute("/work/$slug")({
 });
 
 function CasePage() {
-  const { c } = Route.useLoaderData();
+  const { c } = Route.useLoaderData() as { c: (typeof cases)[number] };
   const p = pillars[c.pillar];
   return (
     <article className="bg-background">
