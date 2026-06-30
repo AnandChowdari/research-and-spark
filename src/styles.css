@@ -162,3 +162,13 @@
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+
+@keyframes logo-mark-a {
+  0%, 100% { transform: translate(80px, -80px); }
+  45%, 55% { transform: translate(0, 0); }
+}
+@keyframes logo-mark-b {
+  0%, 100% { transform: translate(-80px, 80px); }
+  45%, 55% { transform: translate(0, 0); }
+}
+
