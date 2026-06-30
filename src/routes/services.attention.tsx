@@ -2,6 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { pillars } from "@/lib/data";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
+import { ReelGallery } from "@/components/attention/ReelGallery";
+import { PricingMatrix } from "@/components/pricing/PricingMatrix";
+import { Testimonials } from "@/components/site/Testimonials";
 
 const p = pillars.attention;
 
