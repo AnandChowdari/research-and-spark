@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import logo from "@/assets/flogrit-logo.svg.asset.json";
+import { LogoMark } from "./LogoMark";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -25,11 +25,12 @@ export function Nav() {
       >
         <Link
           to="/"
-          className="flex items-center gap-2.5 font-display text-[1.35rem] font-semibold leading-none tracking-[-0.04em]"
+          className="flex items-center gap-2.5 font-display text-[1.5rem] font-semibold leading-none tracking-[-0.04em] text-primary"
         >
-          <img src={logo.url} alt="" width={26} height={26} className="h-[1.4rem] w-[1.4rem]" />
-          <span>Flogrit</span>
+          <LogoMark size={34} className="text-primary" />
+          <span className="text-foreground">Flogrit</span>
         </Link>
+
 
         <nav className="hidden items-center gap-7 md:flex">
           {links.map((l) => (
