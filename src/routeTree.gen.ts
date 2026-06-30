@@ -15,8 +15,6 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
 import { Route as WorkSlugRouteImport } from './routes/work.$slug'
-import { Route as ServicesSystemsRouteImport } from './routes/services.systems'
-import { Route as ServicesContentRouteImport } from './routes/services.content'
 
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
@@ -48,24 +46,12 @@ const WorkSlugRoute = WorkSlugRouteImport.update({
   path: '/work/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServicesSystemsRoute = ServicesSystemsRouteImport.update({
-  id: '/services/systems',
-  path: '/services/systems',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServicesContentRoute = ServicesContentRouteImport.update({
-  id: '/services/content',
-  path: '/services/content',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/pricing': typeof PricingRoute
-  '/services/content': typeof ServicesContentRoute
-  '/services/systems': typeof ServicesSystemsRoute
   '/work/$slug': typeof WorkSlugRoute
   '/work/': typeof WorkIndexRoute
 }
@@ -74,8 +60,6 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/pricing': typeof PricingRoute
-  '/services/content': typeof ServicesContentRoute
-  '/services/systems': typeof ServicesSystemsRoute
   '/work/$slug': typeof WorkSlugRoute
   '/work': typeof WorkIndexRoute
 }
@@ -85,40 +69,20 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/pricing': typeof PricingRoute
-  '/services/content': typeof ServicesContentRoute
-  '/services/systems': typeof ServicesSystemsRoute
   '/work/$slug': typeof WorkSlugRoute
   '/work/': typeof WorkIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/about'
-    | '/contact'
-    | '/pricing'
-    | '/services/content'
-    | '/services/systems'
-    | '/work/$slug'
-    | '/work/'
+  fullPaths: '/' | '/about' | '/contact' | '/pricing' | '/work/$slug' | '/work/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/about'
-    | '/contact'
-    | '/pricing'
-    | '/services/content'
-    | '/services/systems'
-    | '/work/$slug'
-    | '/work'
+  to: '/' | '/about' | '/contact' | '/pricing' | '/work/$slug' | '/work'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/contact'
     | '/pricing'
-    | '/services/content'
-    | '/services/systems'
     | '/work/$slug'
     | '/work/'
   fileRoutesById: FileRoutesById
@@ -128,8 +92,6 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   PricingRoute: typeof PricingRoute
-  ServicesContentRoute: typeof ServicesContentRoute
-  ServicesSystemsRoute: typeof ServicesSystemsRoute
   WorkSlugRoute: typeof WorkSlugRoute
   WorkIndexRoute: typeof WorkIndexRoute
 }
@@ -178,20 +140,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/services/systems': {
-      id: '/services/systems'
-      path: '/services/systems'
-      fullPath: '/services/systems'
-      preLoaderRoute: typeof ServicesSystemsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services/content': {
-      id: '/services/content'
-      path: '/services/content'
-      fullPath: '/services/content'
-      preLoaderRoute: typeof ServicesContentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -200,8 +148,6 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   PricingRoute: PricingRoute,
-  ServicesContentRoute: ServicesContentRoute,
-  ServicesSystemsRoute: ServicesSystemsRoute,
   WorkSlugRoute: WorkSlugRoute,
   WorkIndexRoute: WorkIndexRoute,
 }
