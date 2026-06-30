@@ -67,6 +67,9 @@ function AutomationPage() {
           </div>
         </div>
       </section>
+
+      <PricingMatrix pillar="automation" />
+      <Testimonials pillar="automation" heading="Systems doing the quiet work." />
     </>
   );
 }

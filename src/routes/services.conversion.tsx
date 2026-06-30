@@ -67,6 +67,9 @@ function ConversionPage() {
           </div>
         </div>
       </section>
+
+      <PricingMatrix pillar="conversion" />
+      <Testimonials pillar="conversion" heading="Funnels that actually close." />
     </>
   );
 }
