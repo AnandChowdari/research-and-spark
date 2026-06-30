@@ -72,6 +72,10 @@ function AttentionPage() {
           </div>
         </div>
       </section>
+
+      <ReelGallery />
+      <PricingMatrix pillar="attention" />
+      <Testimonials pillar="attention" heading="Attention that actually converts." />
     </>
   );
 }
