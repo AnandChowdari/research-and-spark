@@ -12,15 +12,15 @@ export default function HeroSection({ onBuyNow }) {
   ];
 
   return (
-    <section className="relative min-h-screen pt-32 pb-20 flex flex-col justify-center overflow-hidden">
+    <section className="relative pt-28 sm:pt-32 pb-16 sm:pb-24 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent-primary/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent-primary/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="noise-overlay" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 relative z-10 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.25fr] gap-10 lg:gap-14 items-center">
           
           {/* Left Text */}
           <motion.div 
@@ -34,25 +34,25 @@ export default function HeroSection({ onBuyNow }) {
               Now Available — Version 1.0
             </div>
             
-            <h1 className="font-display text-5xl md:text-6xl lg:text-[5rem] font-extrabold leading-[1.08] mb-6 text-white tracking-tight">
-              Don’t waste hours.<br />
+            <h1 className="font-display text-[2.6rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-extrabold leading-[1.05] mb-5 text-white tracking-tight">
+              Don't waste hours.<br />
               <span className="font-accent glow-text text-accent-primary">Create captions in seconds.</span>
             </h1>
-            
-            <p className="text-base md:text-lg font-body text-text-secondary leading-relaxed mb-10 max-w-xl">
+
+            <p className="text-base md:text-lg font-body text-text-secondary leading-relaxed mb-8 max-w-xl">
               AI-powered captions in 24 languages — One Click, One-Time License. Works inside Adobe Premiere Pro & After Effects.
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 mb-10 w-full sm:w-auto">
-              <button 
+
+            <div className="flex flex-col sm:flex-row gap-3 mb-8 w-full sm:w-auto">
+              <button
                 onClick={onBuyNow}
-                className="bg-accent-primary hover:bg-accent-secondary text-black px-8 py-4 rounded-xl font-bold text-lg font-display transition-all shadow-[0_0_20px_rgba(198,255,52,0.2)] hover:shadow-[0_0_30px_rgba(198,255,52,0.4)] hover:-translate-y-1"
+                className="bg-accent-primary hover:bg-accent-secondary text-black px-7 py-3.5 rounded-xl font-bold text-base font-display transition-all shadow-[0_0_20px_rgba(198,255,52,0.2)] hover:shadow-[0_0_30px_rgba(198,255,52,0.4)] hover:-translate-y-1"
               >
                 Buy Now — Starting at ₹399
               </button>
-              <a 
+              <a
                 href="#how-it-works"
-                className="flex items-center justify-center px-8 py-4 rounded-xl font-bold text-lg border border-white/20 hover:bg-white/5 transition-all text-white"
+                className="flex items-center justify-center px-7 py-3.5 rounded-xl font-bold text-base border border-white/15 hover:bg-white/5 transition-all text-white"
               >
                 See How It Works
               </a>

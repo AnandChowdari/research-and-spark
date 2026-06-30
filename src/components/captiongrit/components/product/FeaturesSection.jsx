@@ -26,7 +26,7 @@ export default function FeaturesSection() {
     {
       icon: ShieldCheck,
       title: "AI Verification Pass",
-      desc: "Second-pass correction for maximum accuracy (Extreme only).",
+      desc: "Second-pass correction for maximum accuracy (Pro only).",
       highlight: true
     },
     {

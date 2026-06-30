@@ -131,7 +131,7 @@ export default function PricingSection({ onBuyNow }) {
         </motion.div>
 
         {/* Unified Premium Pricing Container */}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="bg-[#0D0D0D]/60 backdrop-blur-md border border-white/10 rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
 
             {/* Background Glows */}
@@ -150,55 +150,57 @@ export default function PricingSection({ onBuyNow }) {
                   className="relative z-10"
                 >
                   <div className="text-center mb-8">
-                    <h3 className="text-xl font-bold text-white mb-2">Select a Plan</h3>
-                    <p className="text-sm text-text-secondary">Click on any plan to see full details and purchase options.</p>
+                    <h3 className="text-xl font-display font-bold text-white mb-2">Choose your plan</h3>
+                    <p className="text-sm text-text-secondary">Tap a card to see everything included.</p>
                   </div>
 
-                  <div className="flex flex-col gap-6 max-w-xl mx-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
                     {plans.map((plan) => {
                       const isPro = plan.isPopular;
                       return (
                         <button
                           key={plan.id}
                           onClick={() => setSelectedPlanId(plan.id)}
-                          className={`group relative text-left rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 focus:outline-none hover:-translate-y-1 ${isPro
-                            ? 'bg-neutral-900 border border-white/10 hover:border-accent-primary/30 shadow-[0_0_30px_rgba(198,255,52,0.08)] md:scale-[1.02]'
-                            : 'bg-white/[0.02] border border-white/10 hover:border-accent-primary/30'
-                            }`}
+                          className={`group relative text-left rounded-2xl p-6 flex flex-col gap-5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/40 hover:-translate-y-1 ${
+                            isPro
+                              ? 'bg-gradient-to-b from-accent-primary/[0.08] to-white/[0.02] border border-accent-primary/40 shadow-[0_0_30px_rgba(198,255,52,0.10)]'
+                              : 'bg-white/[0.02] border border-white/10 hover:border-accent-primary/30'
+                          }`}
                         >
                           {isPro && (
-                            <div className="absolute -top-3 right-6 bg-accent-primary text-black px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md">
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent-primary text-black px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md whitespace-nowrap">
                               <Sparkles className="w-2.5 h-2.5" /> Most Popular
                             </div>
                           )}
 
-                          <div className="w-full">
-                            {/* Plan Label */}
-                            <div className="flex justify-between items-center mb-4">
-                              <span className="text-lg font-bold text-white tracking-tight group-hover:text-accent-primary transition-colors">
-                                {plan.name}
-                              </span>
-                              <span className="text-[10px] text-text-secondary uppercase tracking-widest font-mono">
-                                One-Time
-                              </span>
-                            </div>
-
-                            {/* Summary Limits */}
-                            <div className="space-y-2 mb-6 text-xs text-text-secondary">
-                              <div className="flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-                                <span>{plan.duration}</span>
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-                                <span>{plan.accuracy}</span>
-                              </div>
-                            </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-lg font-display font-bold text-white tracking-tight">
+                              {plan.name}
+                            </span>
+                            <span className="text-[10px] text-text-secondary uppercase tracking-widest font-mono">
+                              One-Time
+                            </span>
                           </div>
 
-                          {/* Action Link */}
-                          <div className="w-full pt-4 border-t border-white/5 flex justify-between items-center text-xs font-bold text-accent-primary">
-                            <span>View Details</span>
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-4xl font-display font-extrabold text-white">
+                              {pricingData.currency}{plan.data.price}
+                            </span>
+                          </div>
+
+                          <ul className="space-y-2 text-xs text-text-secondary border-t border-white/5 pt-4">
+                            <li className="flex items-center gap-2">
+                              <Check className="w-3.5 h-3.5 text-accent-primary shrink-0" />
+                              <span>{plan.duration}</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="w-3.5 h-3.5 text-accent-primary shrink-0" />
+                              <span>{plan.accuracy}</span>
+                            </li>
+                          </ul>
+
+                          <div className="mt-auto pt-3 flex justify-between items-center text-xs font-bold text-accent-primary">
+                            <span>View details</span>
                             <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                           </div>
                         </button>

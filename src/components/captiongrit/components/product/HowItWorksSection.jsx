@@ -286,146 +286,161 @@ export default function HowItWorksSection() {
   };
 
   return (
-    <section id="how-it-works" className="py-32 px-6 bg-bg-secondary relative border-y border-white/5 overflow-hidden">
-      {/* Visual background details */}
+    <section id="how-it-works" className="py-24 sm:py-32 px-5 sm:px-6 bg-bg-secondary relative border-y border-white/5 overflow-hidden">
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-primary/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto relative z-10">
+      <div className="max-w-6xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-20 text-center"
+          className="mb-12 sm:mb-16 text-center"
         >
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4 text-white tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white tracking-tight">
             From footage to captions in <span className="font-accent text-accent-primary">7 steps</span>
           </h2>
-          <p className="text-lg font-body text-text-secondary max-w-2xl mx-auto">
-            Get pixel-perfect animated captions direct to your timeline. No more manual syncing, no more external websites.
+          <p className="text-base sm:text-lg font-body text-text-secondary max-w-2xl mx-auto">
+            Pixel-perfect animated captions delivered straight to your timeline. No manual syncing, no external tools.
           </p>
         </motion.div>
 
-        {/* Dynamic Accordion Stepper */}
-        <div className="flex flex-col gap-6">
-          {steps.map((step, idx) => {
-            const isActive = activeStep === idx;
-            return (
-              <div
-                key={idx}
-                className={`group relative rounded-2xl cursor-pointer transition-all duration-500 overflow-hidden border-2 select-none flex flex-col items-center text-center ${isActive
-                  ? 'bg-bg-tertiary border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.4),0_0_20px_rgba(198,255,52,0.02)]'
-                  : 'bg-transparent border-transparent hover:bg-white/[0.01] hover:border-white/[0.04]'
+        {/* Two-column on desktop: step list + sticky preview. Stacked on mobile. */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-6 lg:gap-10 items-start">
+          {/* Step list */}
+          <div className="flex flex-col gap-2">
+            {steps.map((step, idx) => {
+              const isActive = activeStep === idx;
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onMouseEnter={() => setActiveStep(idx)}
+                  onFocus={() => setActiveStep(idx)}
+                  onClick={() => setActiveStep((prev) => (prev === idx ? null : idx))}
+                  className={`group relative w-full text-left rounded-2xl border transition-all duration-300 overflow-hidden ${
+                    isActive
+                      ? 'bg-white/[0.04] border-accent-primary/25 shadow-[0_10px_30px_rgba(0,0,0,0.4),0_0_24px_rgba(198,255,52,0.05)]'
+                      : 'bg-white/[0.01] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.03]'
                   }`}
-                onMouseEnter={() => setActiveStep(idx)}
-                onMouseLeave={() => setActiveStep(null)}
-              >
-                {/* Step Header */}
-                <div className="flex flex-col items-center p-8 gap-4 w-full">
-                  <div className={`w-12 h-12 shrink-0 rounded-full border flex items-center justify-center font-display font-bold text-lg transition-all duration-300 z-10 ${isActive
-                    ? 'bg-accent-primary border-accent-primary text-black shadow-[0_0_15px_rgba(198,255,52,0.25)]'
-                    : 'bg-white/5 border-white/10 text-text-secondary group-hover:text-white group-hover:border-white/20'
-                    }`}>
-                    {idx + 1}
-                  </div>
-
-                  <div className="space-y-2">
-                    <h3 className={`text-xl font-bold tracking-tight transition-all duration-300 ${isActive ? 'text-white font-extrabold' : 'text-text-secondary group-hover:text-white'
-                      }`}>
-                      {step.title}
-                    </h3>
-                    <p className={`text-base leading-relaxed transition-all duration-300 max-w-xl mx-auto ${isActive ? 'text-text-primary' : 'text-text-secondary'
-                      }`}>
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Video Player Sub-box (Expanded only when active) */}
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                      className="w-full overflow-hidden"
+                >
+                  <div className="flex items-start gap-4 p-5 sm:p-6">
+                    <div
+                      className={`w-10 h-10 shrink-0 rounded-full border flex items-center justify-center font-display font-bold text-base transition-all duration-300 ${
+                        isActive
+                          ? 'bg-accent-primary border-accent-primary text-black shadow-[0_0_15px_rgba(198,255,52,0.3)]'
+                          : 'bg-white/5 border-white/10 text-text-secondary group-hover:text-white'
+                      }`}
                     >
-                      <div className="px-8 pb-8 pt-2 w-full flex justify-center">
-                        <div className="w-full max-w-[620px] aspect-[16/10] bg-[#0E0E10] rounded-2xl border border-white/10 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(198,255,52,0.03)] flex flex-col relative group/player">
-                          {/* macOS-style traffic light header */}
-                          <div className="px-5 py-3 border-b border-white/5 bg-[#0B0B0C] flex items-center justify-between">
-                            <div className="flex gap-1.5">
-                              <span className="w-3 h-3 rounded-full bg-red-500/20 group-hover/player:bg-red-500/80 transition-colors duration-200" />
-                              <span className="w-3 h-3 rounded-full bg-yellow-500/20 group-hover/player:bg-yellow-500/80 transition-colors duration-200" />
-                              <span className="w-3 h-3 rounded-full bg-green-500/20 group-hover/player:bg-green-500/80 transition-colors duration-200" />
-                            </div>
-                            <div className="px-3 py-0.5 rounded bg-white/5 text-[10px] text-text-secondary font-mono tracking-wider">
-                              PREVIEW WINDOW
-                            </div>
-                            <div className="w-12" />
-                          </div>
+                      {idx + 1}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3
+                        className={`text-base sm:text-lg font-display font-bold tracking-tight transition-colors ${
+                          isActive ? 'text-white' : 'text-text-primary/80 group-hover:text-white'
+                        }`}
+                      >
+                        {step.title}
+                      </h3>
+                      <p className="text-sm text-text-secondary leading-relaxed mt-1">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
 
-                          {/* Video viewport area */}
-                          <div className="flex-grow relative overflow-hidden bg-black/60">
-                            {!USE_SINGLE_VIDEO ? (
-                              <video
-                                autoPlay
-                                playsInline
-                                muted
-                                loop
-                                className={`absolute inset-0 w-full h-full ${idx === 5 ? 'object-contain' : 'object-cover'}`}
-                                onError={(e) => {
-                                  // Use fallback if video fails to load
-                                  e.target.style.display = 'none';
-                                  e.target.nextSibling.style.display = 'block';
-                                }}
-                              >
-                                <source src={VIDEO_SOURCES[idx]} type="video/webm" />
-                              </video>
-                            ) : (
-                              <video
-                                autoPlay
-                                playsInline
-                                muted
-                                loop
-                                src={SINGLE_VIDEO_PATH}
-                                className="absolute inset-0 w-full h-full object-cover"
-                              />
-                            )}
-                            
-                            {/* Fallback container (shown if video fails or is missing) */}
-                            <div className="absolute inset-0 w-full h-full" style={{ display: 'none' }}>
-                               {renderFallbackAnimation(idx)}
-                            </div>
-                          </div>
-
-                          {/* Player timeline footer control bar */}
-                          <div className="px-5 py-3.5 border-t border-white/5 bg-[#0B0B0C] flex items-center justify-between text-xs font-mono select-none">
-                            <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center border border-white/5 text-white opacity-50 cursor-default">
-                                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                                  <rect x="4" y="4" width="4" height="16" />
-                                  <rect x="16" y="4" width="4" height="16" />
-                                </svg>
-                            </div>
-
-                            <div className="text-text-secondary text-[11px] shrink-0 font-semibold select-none flex items-center gap-2">
-                              <span>0{idx + 1}</span>
-                              <span className="opacity-30">/</span>
-                              <span className="opacity-50">0{steps.length}</span>
-                            </div>
-                          </div>
+                  {/* Mobile inline preview when active */}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+                        className="lg:hidden overflow-hidden"
+                      >
+                        <div className="px-5 pb-5">
+                          <PreviewFrame idx={idx} total={steps.length} renderFallback={renderFallbackAnimation} />
                         </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </button>
+              );
+            })}
+          </div>
 
-
-              </div>
-            );
-          })}
+          {/* Desktop sticky preview */}
+          <div className="hidden lg:block sticky top-28">
+            <PreviewFrame
+              idx={activeStep ?? 0}
+              total={steps.length}
+              renderFallback={renderFallbackAnimation}
+            />
+          </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function PreviewFrame({ idx, total, renderFallback }) {
+  return (
+    <div className="w-full aspect-[16/10] bg-[#0E0E10] rounded-2xl border border-white/10 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(198,255,52,0.03)] flex flex-col relative">
+      <div className="px-4 sm:px-5 py-2.5 sm:py-3 border-b border-white/5 bg-[#0B0B0C] flex items-center justify-between shrink-0">
+        <div className="flex gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+          <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+          <span className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+        </div>
+        <div className="px-2.5 py-0.5 rounded bg-white/5 text-[10px] text-text-secondary font-mono tracking-wider">
+          PREVIEW WINDOW
+        </div>
+        <div className="w-10" />
+      </div>
+
+      <div className="flex-grow relative overflow-hidden bg-black/60">
+        {!USE_SINGLE_VIDEO ? (
+          <video
+            key={idx}
+            autoPlay
+            playsInline
+            muted
+            loop
+            className={`absolute inset-0 w-full h-full ${idx === 5 ? 'object-contain' : 'object-cover'}`}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              if (e.target.nextSibling) e.target.nextSibling.style.display = 'block';
+            }}
+          >
+            <source src={VIDEO_SOURCES[idx]} type="video/webm" />
+          </video>
+        ) : (
+          <video
+            autoPlay
+            playsInline
+            muted
+            loop
+            src={SINGLE_VIDEO_PATH}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
+        <div className="absolute inset-0 w-full h-full" style={{ display: 'none' }}>
+          {renderFallback(idx)}
+        </div>
+      </div>
+
+      <div className="px-4 sm:px-5 py-3 border-t border-white/5 bg-[#0B0B0C] flex items-center justify-between text-xs font-mono select-none shrink-0">
+        <div className="w-6 h-6 rounded-md bg-white/5 flex items-center justify-center border border-white/5 text-white/60">
+          <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
+            <rect x="4" y="4" width="4" height="16" />
+            <rect x="16" y="4" width="4" height="16" />
+          </svg>
+        </div>
+        <div className="text-text-secondary text-[11px] font-semibold flex items-center gap-2">
+          <span className="text-accent-primary">0{idx + 1}</span>
+          <span className="opacity-30">/</span>
+          <span className="opacity-50">0{total}</span>
+        </div>
+      </div>
+    </div>
   );
 }
