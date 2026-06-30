@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { Check } from "lucide-react";
-import { pillarPricing, type PillarKey } from "@/lib/data";
+import { pillarPricing, type PillarKey, type PricingTier } from "@/lib/data";
 import { TiltCard } from "@/components/ui/TiltCard";
 
 function formatINR(n: number) {
@@ -38,13 +38,7 @@ export function PricingMatrix({ pillar, compact = false }: { pillar: PillarKey; 
   );
 }
 
-function TierCard({
-  tier,
-  delay,
-}: {
-  tier: ReturnType<typeof getTier>;
-  delay: number;
-}) {
+function TierCard({ tier, delay }: { tier: PricingTier; delay: number }) {
   const [idx, setIdx] = useState(tier.options.length > 1 ? 1 : 0);
   const opt = tier.options[idx];
 
