@@ -138,8 +138,3 @@ function TierCard({ tier, delay }: { tier: PricingTier; delay: number }) {
     </motion.div>
   );
 }
-
-// helper just for typing
-function getTier() {
-  return pillarPricing.attention.tiers[0];
-}
