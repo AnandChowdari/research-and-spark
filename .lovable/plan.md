@@ -1,158 +1,87 @@
-Updated plan with the new headline, hero animation, studio section, and the "two flows" adaptive narrative.
 
-## The big idea
+# Plan — Pricing, Looping Reels, Testimonials, Live Feel
 
-One homepage. One headline. **Reader picks their problem mid-scroll**, and the rest of the page reorders + rewords itself so their pillar leads and the other pillar gets pitched as the natural next step.
+Goal: each pillar page (Attention / Conversion / Automation) gets its own dynamic pricing system inline. Attention gets a looping video gallery showing edited work. Every page picks up testimonials, scroll/hover animations, and a richer dark texture so the site feels alive instead of static.
 
-## Headline + hero
+## 1. Pricing data (per pillar)
 
-- H1: **"We create a flow of attention to leads for your business."**
-- Sub: One line — *Content that earns reach. AI systems that turn that reach into booked calls.*
-- CTAs: *Book a discovery call* (primary, lime) · *See the work* (ghost).
-- Right side: the 3-circle hero animation (below).
+Extend `src/lib/data.ts` with a new `pillarPricing` record keyed by pillar. Each pillar has 2–3 "tiers" (cards), and each tier has multiple **selectable quantity options** powering the dynamic card.
 
-## Hero animation — 3-circle flow
+- **Attention**
+  - *Simple Edits* — toggles: 4 / 8 / 12 / 20 videos (₹4k → ₹3.2k per video)
+  - *Precise Edits* — toggles: 4 / 8 / 12 videos (cinematic, ₹7k → ₹6.2k per video)
+  - *Content Engine retainer* — toggles: 1 / 3 / 6 months (strategy + shoot direction + posting)
+- **Conversion**
+  - *Landing page* — toggles: 1 / 3 / 5 pages (₹35k → ₹28k per page)
+  - *Full site build* — toggles: 5 / 8 / 12 pages (from ₹1.2L)
+  - *Funnel + copy system* — toggles: 1 / 2 / 3 funnels (research-backed market rates ₹60k–₹1.8L)
+- **Automation**
+  - *AI Chatbot (web + WhatsApp)* — toggles: 1 / 2 / 3 channels (₹45k → ₹95k setup + retainer)
+  - *Voice AI agent* — toggles: 500 / 1500 / 3000 mins/mo (₹25k → ₹70k)
+  - *CRM + workflow system* — toggles: Starter / Growth / Engine (₹35k / ₹75k / ₹1.4L per month)
 
-Canvas + particles, Framer Motion controls, ~60fps, respects `prefers-reduced-motion` (falls back to static SVG).
+Each tier card shows: tier name, tagline, the segmented toggle, the live computed price, per-unit price, included bullets, CTA.
 
-```text
-   ┌─ Video Editing ─┐         ┌─ Meta Ads ──────┐         ┌─ CRM Sync ──────┐
-   │ Content Strat.  │         │ AI Automation   │         │ WhatsApp/IG bots│
-   │ Branding        │         │ SEO + Website   │         │ Voice Agents    │
-   └────────┬────────┘         └────────┬────────┘         └────────┬────────┘
-        ╭───▼───╮      ░░░         ╭────▼───╮     ░░░         ╭─────▼────╮
-        │ REACH │ ━━━━━━━━━━━━━▶  │  LEADS │ ━━━━━━━━━━━━━▶  │ SYSTEMS  │
-        ╰───────╯                  ╰────────╯                  ╰──────────╯
-```
+## 2. Component: `<PricingMatrix pillar="…" />`
 
-- 3 big nodes left→right, each pulsing in sequence; when a big node "lights up" its 3 sub-circles orbit in and dock.
-- Particle stream flows between big nodes (lime particles, purple trails), continuous loop.
-- On hover/tap a big node: sub-circles spread, labels animate in.
-- Built with `<canvas>` for the particle field + a thin SVG overlay for the circles/labels so text stays crisp & accessible.
+New file `src/components/pricing/PricingMatrix.tsx`.
+- Renders the tier cards for a given pillar from `pillarPricing`.
+- Each card uses local `useState` for selected option index.
+- Segmented control (pill buttons) flips the option; price + per-unit animate (Framer Motion `AnimatePresence` + numeric tween).
+- Hover: lime glow + slight lift (`shadow-[0_0_0_1px_var(--lime)/40,0_30px_60px_-20px_var(--lime)/20]`).
+- Mount on `services.attention.tsx`, `services.conversion.tsx`, `services.automation.tsx` as a new "Pricing" section.
+- Update `/pricing` page to render all three matrices stacked under section headers so the global pricing page stays consistent.
 
-## Page flow
+## 3. Looping reel gallery (Attention page)
 
-```text
-1. HERO  (headline + 3-circle animation)
-2. STUDIO STRIP  (reel wall — masonry of vertical reels, autoplay-on-hover, metric overlays)
-3. THE GATE  ← personalization happens here
-4. PILLAR A  (deep dive)
-5. BRIDGE COPY  (rephrased per choice)
-6. PILLAR B  (deep dive)
-7. PROOF  (case studies + testimonials + stats)
-8. PRICING  (video plans + AI engagement tiers + custom)
-9. FAQ + FINAL CTA + FOOTER
-```
+New `src/components/attention/ReelGallery.tsx`.
+- 6–8 cards, each is a CSS-driven looping "edit" preview: a small SVG/Canvas mock of a video player (timeline scrubber animates, waveform pulses, cut-marks flash) — no real video files needed. Uses the existing `reels` data for titles/clients/views.
+- Auto-scrolling marquee row (uses existing `@keyframes marquee`) on top, static grid below; hover pauses marquee and shows a "play" lime ring with title overlay slide-up.
+- Sits between hero and pricing on `/services/attention`.
 
-## Studio strip (section 2)
+## 4. Testimonials
 
-Right after the hero, the vibe shifts hard — feels like walking into an edit bay.
+Add `testimonials` array to `src/lib/data.ts` (6 entries, one+ tied to each pillar, with name/role/company/quote/metric).
+New `src/components/site/Testimonials.tsx`:
+- Marquee row of quote cards (infinite horizontal scroll, pauses on hover) + a featured "spotlight" card with avatar initials and metric chip.
+- Cards have subtle lime border-glow on hover and a quote-mark watermark.
+- Mounted on: home (`index.tsx`) before FinalCTA, and at the bottom of each pillar page.
 
-- Dark masonry wall of 8–10 vertical reels (9:16), staggered heights.
-- Each tile: poster frame → autoplays muted on hover, shows view-count + watch-time chip.
-- Subtle film-grain overlay, lime scrubber line animating across the section header.
-- Header: *"Built in our studio. Watched by your buyers."*
-- No sales copy here — it's pure showcase, lets the work talk.
+## 5. Live feel — animations & dark texture
 
-## The Gate (section 3) — inline, not modal
+- **Global background texture:** layer the existing `grain` utility on `<body>` plus a new fixed `@utility noise-bg` (radial vignette + faint lime/purple aurora blobs that slowly drift via `@keyframes aurora-drift`). Implemented as a single fixed `<div aria-hidden>` inside `__root.tsx`.
+- **Nav:** keep glass pill; add a soft animated lime underglow that pulses on scroll-stuck state and a hairline scanline texture inside the pill.
+- **Section reveals:** wrap each pillar service card, pricing card, testimonial, reel card with Framer Motion `whileInView` (y:24 → 0, stagger 0.06s).
+- **Hover micro-interactions:**
+  - Buttons/cards → lime ring + scale 1.02 + cursor-tracking radial highlight (CSS `--mx/--my` vars updated on `onMouseMove`).
+  - Service titles → `story-link` underline reveal.
+  - Pricing numbers → swap with motion `key={option}` for a slot-machine feel.
+- **Scroll progress bar** in nav (1px lime line) tied to `useScroll` from motion.
+- **3D tilt** on the pricing tier cards and reel cards (lightweight: `rotateX/rotateY` from pointer position, no library).
 
-Full-bleed band with two giant tappable cards:
+## 6. Files
 
-> **What's actually killing your growth right now?**
->
-> - **A) "I can't build presence."** I'm invisible. Posts flop, no one knows the brand exists.
-> - **B) "I get views but no customers."** Reach is fine, conversion is broken.
+New:
+- `src/components/pricing/PricingMatrix.tsx`
+- `src/components/attention/ReelGallery.tsx`
+- `src/components/site/Testimonials.tsx`
+- `src/components/site/AmbientBackground.tsx` (fixed aurora + grain layer)
+- `src/components/ui/TiltCard.tsx` (shared pointer-tilt wrapper)
 
-- Choice persists in `localStorage` (`flow=A|B`), can be re-toggled from a small chip in the sticky nav.
-- No choice yet? Default = A. Page renders fine either way.
-- Smooth Framer Motion reorder when toggled (`<Reorder.Group>` style, ~400ms).
+Modified:
+- `src/lib/data.ts` — add `pillarPricing`, `testimonials`.
+- `src/styles.css` — `noise-bg`, `aurora-drift`, `tilt-card`, hover-glow utilities, scrollbar-progress keyframes.
+- `src/routes/__root.tsx` — mount `<AmbientBackground />`, scroll progress bar.
+- `src/routes/services.attention.tsx` — add ReelGallery + PricingMatrix + Testimonials.
+- `src/routes/services.conversion.tsx` — add PricingMatrix + Testimonials.
+- `src/routes/services.automation.tsx` — add PricingMatrix + Testimonials.
+- `src/routes/pricing.tsx` — replace static tier blocks with three `<PricingMatrix>` instances.
+- `src/routes/index.tsx` — slot Testimonials before FinalCTA.
+- `src/components/site/Nav.tsx` — scroll progress + subtle inner scanline.
 
-## Two flows (same sections, reordered + reworded)
-
-### Flow A — "Build presence first"
-
-Pillar 1 = **Content & Reach** · Pillar 2 = **Conversion systems**
-
-- Bridge line between them: *"Cool — you've got eyes on you. Now the harder part: turning watchers into buyers."*
-- Pillar 1 gets the bigger visual real estate, Pillar 2 framed as "what comes next."
-
-### Flow B — "I need conversion"
-
-Pillar 1 = **Conversion systems** · Pillar 2 = **Content & Reach**
-
-- Bridge line: *"Funnels only work if there's traffic in them. Here's how we keep filling the top."*
-- Pillar 1 (AI/Ads) leads; Pillar 2 (Video) framed as the long-term moat.
-
-Both flows pull from the same component library — only `order`, hero copy of each pillar section, and bridge-line text change. Driven by a single `useFlow()` hook.
-
-## Pillar — Content & Reach (detailed)
-
-- Section hero with lime scrubber animation.
-- Services: **Video Editing · Content Strategy · Branding · Short-form reels · Long-form YouTube · Ad creatives**.
-- Each service = card with mini animated icon + 2-line outcome + sample work link.
-- Plans inline (from your sheet):
-  - **Simple**: 4×4000 / 8×3800 / 12×3500
-  - **Precise**: 4×7000 / 8×6800 / 12×6500
-  - Chips: *Try one video first* · *Bulk campaign? Book a call*
-- Custom band: SaaS animations · Product launch · Branding · *Starts ₹26,000*.
-
-## Pillar — Conversion systems (detailed)
-
-- Section hero with the **Ads → Automation → Conversion** SVG pipeline animating in.
-- Services, each with its own subsection:
-  - **Meta Ads** — creative + targeting + scaling.
-  - **AI Automation Systems** — Meta/WhatsApp/Instagram message automations.
-  - **Chatbots for websites** — qualify + book.
-  - **Voice Agents** — 24/7 inbound + outbound.
-  - **SEO Ranking** — content + technical + local.
-  - **Websites that convert** — fast, tracked, lead-routed.
-- "4 Lead Funnels" interactive diagram (4 nodes, tap to expand).
-- Outbound arrow: *From messages to booked calls.*
-
-## Sub-routes (depth + SEO)
-
-```
-/                      Adaptive home (everything above)
-/services/content      Video + content + branding deep dive
-/services/systems      Ads + AI + SEO + sites deep dive
-/work                  Case study grid
-/work/$slug            Long-form case study
-/pricing               All plans side-by-side
-/about                 Founder + studio + manifesto
-/contact               Form + calendar CTA
-```
-
-Every route has its own `head()` (title, description, og:title/description). `og:image` only at leaves.
-
-## Visual system
-
-- **Palette**: bg `#121212`, fg `#F0F2C0`, primary lime `#C6FF34` (hover `#A8E109`), accent purple `#8671D3`. Tokens in `src/styles.css` as oklch.
-- **Type**: Space Grotesk (display) · Inter Tight (body) · JetBrains Mono (numbers/labels), via `@fontsource`.
-- **Texture**: subtle film grain overlay on dark sections, lime scanline accents in the studio strip.
-- **Motion**: Framer Motion everywhere; one canvas animation (hero); reduced-motion path for everything.
-
-## Technical
-
-- TanStack Start file routes; `useFlow()` hook reads `localStorage` + URL `?flow=a|b` for shareable links.
-- Page sections render through a single `<FlowOrdered />` component that takes an array and reorders by flow.
-- Hero canvas isolated in its own client component, lazy-loaded, paused when off-screen via `IntersectionObserver`.
-- Reel wall uses `<video muted playsinline preload="metadata">`; only plays on hover/in-view.
-- All data (services, plans, cases, reels) in typed TS files — no backend in v1.
-- Contact form posts to a stub server function (logs + returns ok). Real delivery later.
-- SEO: per-route head(), semantic HTML, JSON-LD Organization on home + Article on case studies.
-
-## Out of scope (v1)
-
-Auth, CMS, real form delivery, blog, analytics dashboard, A/B testing infra. The flow toggle is the lightweight personalization — full A/B can come later.
-
-## Build order
-
-1. Tokens, fonts, nav, footer, root, `useFlow()` hook + flow context.
-2. Hero (headline + canvas 3-circle animation + reduced-motion SVG fallback).
-3. Studio reel-wall strip.
-4. The Gate + flow reorder mechanics.
-5. Pillar — Content & Reach (with both plan tables + custom band).
-6. Pillar — Conversion systems (with 4-funnel + ads pipeline diagrams).
-7. Proof, pricing, FAQ, final CTA.
-8. Sub-routes: `/services/*`, `/work` + 1 case template + 3 cases, `/pricing`, `/about`, `/contact`.
-9. SEO pass, reduced-motion pass, mobile pass.
+## Technical notes
+- No new dependencies; uses already-installed `motion` and Tailwind v4 utilities.
+- All prices live in `data.ts` so they stay editable in one place.
+- Tilt + cursor-glow use pure React state + CSS vars — no perf hit.
+- Aurora background is a single fixed element with `pointer-events:none` so it never blocks clicks.
+- Respects `prefers-reduced-motion` (disables aurora drift, marquee, tilt).
