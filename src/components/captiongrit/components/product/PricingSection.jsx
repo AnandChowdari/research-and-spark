@@ -131,7 +131,7 @@ export default function PricingSection({ onBuyNow }) {
         </motion.div>
 
         {/* Unified Premium Pricing Container */}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="bg-[#0D0D0D]/60 backdrop-blur-md border border-white/10 rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
 
             {/* Background Glows */}
